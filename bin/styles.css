@@ -1,0 +1,288 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "JetBrains Mono", "Consolas", "Monaco", monospace;
+  background: rgb(20,20,20);
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.bg-editor {
+  background-color: rgb(20,20,20);
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+.min-h-\[40px\] {
+  min-height: 40px;
+}
+
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.pt-2 {
+  padding-top: 0.5rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
+}
+
+.border-t {
+  border-top: 1px solid;
+}
+
+.border-separator {
+  border-color: #333333;
+}
+
+#tabs-container {
+  background-color: rgb(20,20,20);
+  display: flex;
+  align-items: flex-end;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  position: relative;
+  min-width: 120px;
+  max-width: 200px;
+  border-radius: 8px 8px 0 0;
+  background-color: rgb(25,25,25);
+  color: #9ca3af;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+  margin-right: 0;
+}
+
+.tab:hover {
+  color: #e5e7eb;
+  background-color: #2a2a2a;
+}
+
+.tab.active {
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+}
+
+.tab-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.tab-name {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-unsaved {
+  color: #60a5fa;
+  margin-left: 4px;
+}
+
+.tab-close {
+  margin-left: 16px;
+  padding: 4px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.tab-close svg {
+  width: 12px;
+  height: 12px;
+}
+
+.add-tab-button,
+#add-tab-btn {
+  padding: 8px;
+  margin-left: 4px;
+  color: #9ca3af;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.add-tab-button:hover,
+#add-tab-btn:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-overlay.hidden {
+  display: none;
+}
+
+.dialog-content {
+  background-color: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  padding: 24px;
+  min-width: 400px;
+  color: white;
+}
+
+.dialog-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #1a1a1a;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.dialog-input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.dialog-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.dialog-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dialog-button.secondary {
+  background: none;
+  border: 1px solid #404040;
+  color: #9ca3af;
+}
+
+.dialog-button.secondary:hover {
+  background-color: #404040;
+}
+
+.dialog-button.primary {
+  background-color: #2563eb;
+  border: 1px solid #2563eb;
+  color: white;
+}
+
+.dialog-button.primary:hover {
+  background-color: #1d4ed8;
+}
+
+.context-menu {
+  position: fixed;
+  background-color: #2a2a2a;
+  border: 1px solid #404040;
+  border-radius: 4px;
+  padding: 4px 0;
+  min-width: 150px;
+  z-index: 1000;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.context-menu.hidden {
+  display: none;
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.context-menu-item:hover {
+  background-color: #404040;
+}
+
+.context-menu-item svg {
+  margin-right: 8px;
+}
+
+#editor-container {
+  position: relative;
+  background: rgb(20,20,20) !important;
+}
+
+.monaco-editor .monaco-editor-background,
+.monaco-editor .margin {
+  background: rgb(20,20,20) !important;
+}

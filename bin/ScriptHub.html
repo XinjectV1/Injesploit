@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+:root {
+            --bgcolor: #161616; 
+            --searbarbgcolor: #666363; /*on hover*/
+            --searchbarbordercolor: #ffffff;
+            --sarchbarbordercolorfocused: #f5f5f5;
+            --scriptcardbgcolor: rgb(41, 41, 41); 
+            --scriptcardbordercolor: #5c0707;
+            --scriptcardbordercoloronhover: #f0f0f0;
+            --scriptcardglow: #f0f0f0;
+            --Scripttitlecolor: #ff0000;
+            --Scriptgametitlecolor: #ffffff;
+            --clickcolor: #73ff00;
+            --copybuttonbgcolor: rgb(41, 41, 41);
+            --copybuttonbordercolor: #ff0000;
+            --copybuttontextcolor: #ff0000;
+            --copybuttonbgcolorclick: #f5f5f5;
+            --copybuttonbgcolorhover: #f5f5f541;
+           
+        }
+
+
+body {background-color: var(--bgcolor); font-family: Arial, Helvetica, sans-serif; color: white; padding: 20px;}
+.searchbar {
+    background-color: transparent;
+    border: 1px solid var(--searchbarbordercolor);
+    border-radius: 25px;
+    text-align: center;
+    align-self: center;
+    position: fixed;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    left: 50%;top: 5px;
+    transform: translateX(-50%);
+    padding: 8px 15px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #f0f0f0;
+    outline: none;
+    width: 250px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(255, 77, 77, 0.1);
+    margin-bottom: 100px;
+   
+}
+
+
+.searchbar:focus {
+    border-color: var(--sarchbarbordercolorfocused);
+    box-shadow: 0 0 0 2px var(--sea);
+    background-color: var(--searbarbgcolor);
+}
+
+.scriptscontainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 32px;
+  padding: 40px 20px;
+  margin: 0 auto;
+  max-width: 1280px;
+  margin-top: 12x;
+  width: 100%;
+}
+
+.script {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.script:hover {
+  transform: translateY(-6px);
+  transform: scale(1.06);
+  box-shadow: 0 10px 24px var(--scriptcardbordercoloronhover);
+}
+
+.script img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+}
+
+.script-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-grow: 1;
+  margin-bottom: 0px;
+}
+
+.script h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.game-name {
+  font-size: 0.95rem;
+  color: #bbb;
+}
+
+.copy {
+  margin-top: auto;
+  padding: 10px 14px;
+  background-color: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy:hover {
+  background-color: var(--copybuttonbgcolorhover);
+  color: white;
+  border-color: var(--copybuttonbordercolor);
+}
+
+.copy:active {
+  background-color: var(--copybuttonbgcolorclick);
+  color: white;
+}
+</style></head>
+<body>
+    <div>
+        <input class="searchbar" placeholder="search here">
+    </div>
+    <div class="scriptscontainer">
+        ...
+    </div>
+</body>
+<script>
+const proxies = [
+    'https://cors-anywhere.herokuapp.com/',
+    'https://api.codetabs.com/v1/proxy/?quest=',
+    'https://thingproxy.freeboard.io/fetch/'
+];
+let page = 1; 
+let loading = false;
+let proxy = 0
+
+    async function load(scripts) {
+        const c = document.querySelector('.scriptscontainer')
+        try {
+            const url = 'https://scriptblox.com/api/script/fetch'
+            const response = await fetch( proxies[proxy] + url)
+            const jsdata = await response.json()
+            if (jsdata?.result?.scripts) {
+                addscript(jsdata.result.scripts);
+            }} catch{
+                console.log('Swapping')
+                proxy = (proxy + 1) % proxies.length
+    await load()}}
+
+async function loadpage(page = 2) {
+    const container = document.querySelector('.scriptscontainer');
+
+    try {
+        const url = `https://scriptblox.com/api/script/fetch?page=${page}`;
+        const response = await fetch(proxies[proxy] + url);
+        const jsdata = await response.json();
+        if (jsdata?.result?.scripts?.length > 0) {
+            addscript(jsdata.result.scripts);
+        } else {
+            console.log("You've Reached the end 🛸");
+        }
+    } catch{
+        console.log('Swapping')
+        proxy = (proxy + 1) % proxies.length
+        await loadpage(page); 
+    }
+}
+
+
+   function addscript(scripts) {
+  const container = document.querySelector('.scriptscontainer');
+  container.innerHTML = ''; 
+
+  scripts.forEach(script => {
+const raw = script.image;
+const imageUrl = raw
+  ? (raw.startsWith('http') ? raw : `https://scriptblox.com${raw}`)
+  : 'https://placehold.co/300x180/2d2d2d/808080?text=No+Image';
+
+
+    const card = document.createElement('div');
+    card.className = 'script';
+    card.innerHTML = `
+
+  <img src="${imageUrl}">
+  <div class="script-content">
+    <h3>${script.title || 'Unknown'}</h3>
+    <div class="game-name">${script.game.name || 'Unknown Game'}</div>
+    <div class="veiws">${script.views + ' Views 👀' || 'Unknown Value'}</div>
+    <button class="copy" data-script="${encodeURIComponent(script.script)}">Copy
+  </div>`;
+    container.appendChild(card);
+  });
+}
+       
+    
+document.addEventListener('click', async (e) => {
+    if (e.target.className === 'copy') {
+        const encodedScript = e.target.getAttribute('data-script');
+        const fullScript = decodeURIComponent(encodedScript);
+        
+        try {
+            await navigator.clipboard.writeText(fullScript);
+            e.target.innerText = 'Copied!';
+            await new Promise(r => setTimeout(r, 1000));
+            e.target.innerText = 'Copy';
+        } catch (error) {
+            console.error('Copy error:', error);
+        }
+}});
+
+const searchbar = document.querySelector('.searchbar');
+           searchbar.addEventListener('input', async (e) => {
+            const content = e.target.value.trim();
+            const container = document.querySelector('.scriptscontainer');
+            if (!content) {
+                await load()
+                return;
+            }
+            container.innerHTML = '<p>Searching...</p>'
+
+            try {
+
+            const searchUrl = `https://scriptblox.com/api/script/search?q=${encodeURIComponent(content)}`;
+            const answer = await fetch(proxies[proxy] + searchUrl)
+           if (!answer.ok) { console.log('search fetch error')}
+           const data = await answer.json();
+           if (data?.result?.scripts?.length > 0) {
+            addscript(data.result.scripts);
+           }
+           else { container.innerHTML = '<p>No scripts found, search something else</p>';}
+            }
+           catch (error) {
+            proxy = (proxy + 1) % proxies.length
+            console.error("Search error:", error)
+           }})
+
+        load()
+window.addEventListener('scroll', async () => {
+  const bottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+  if (bottom && !loading) {
+    loading = true;
+    page = page + 1;
+    await loadpage(page);
+    loading = false;
+    window.scrollTo(0, 0);
+  }
+});
+
+</script>
+</html>
